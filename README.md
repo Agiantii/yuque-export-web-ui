@@ -2,7 +2,8 @@
 
 这是一个用于导出 Yuque 文档的 Web UI 项目。该项目允许用户通过 Web 界面输入 Cookie 并选择要导出的书籍，最终生成包含所选书籍的 ZIP 文件。
 
-
+# web界面
+![alt text](assets/README/image.png)
 # ps
 - 你可以结合 [img-immigrate](https://github.com/Agiantii/img-immigrate.git)实现
   - 本地图片迁移至图床

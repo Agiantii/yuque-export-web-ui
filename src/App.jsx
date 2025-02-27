@@ -77,16 +77,11 @@ function App() {
         }}
       >
         <a href="http://blog.agiantii.fun/post/project/yuque-export-web-ui/Q&A.html#q-a" target="_blank" rel="noreferrer"
-         style={
-          {
-            color: "white",
-            textDecoration: "none",
-            background: "#007bff",
-            padding: "5px 10px",
-            borderRadius: "5px",
-          }
-         }
+          className='link'
         >Q&A</a>
+        <a href="https://github.com/Agiantii/yuque-export-web-ui.git" target="_blank" rel="noreferrer"
+          className='link'
+        >github</a>
       </div>
       {!books.length ?(
         <ConfigForm onSubmit={handleConfigSubmit} loading={loading} />
