@@ -1,0 +1,39 @@
+name: Auto Push to Server
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+    name: deploy  blog
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm install -g pnpm && pnpm install
+      - name: Build
+        run: pnpm build
+      - name: check structure
+        run: ls && echo "-----------" && du dist -h -d 1
+      - name: copy front via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          source: "./dist" # 直接把dist传到服务器 
+          target: ${{ secrets.SERVER_TARGET }}
+      - name: install server dependencies
+        run: pnpm install --prefix ./server
+      - name: copy server via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          source: "./server" # 直接把server传到服务器 
+          target: ${{ secrets.SERVER_TARGET }}
