@@ -19,14 +19,8 @@ app.use((req, res, next) => {
 
 // 允许前端访问
 app.use(cors({
-  origin: function(origin, callback) {
-    // // 允许本地开发环境的请求
-    // if (!origin || origin.startsWith('http://localhost:')) {
-    //   callback(null, true);
-    // } else {
-    //   callback(new Error('Not allowed by CORS'));
-    // }
-    callback(null,true)
+  origin: function (origin, callback) {
+    callback(null, true);
   },
   credentials: true
 }));
@@ -52,7 +46,7 @@ app.post('/api/books', async (req, res) => {
   console.log('\n=== Books Request ===');
   const { cookie } = req.body;
   console.log('Received cookie from body:', cookie);
-  
+
   try {
     const response = await axios.get('https://www.yuque.com/api/mine/book_stacks', {
       headers: {
@@ -60,7 +54,7 @@ app.post('/api/books', async (req, res) => {
         Cookie: cookie
       }
     });
-    
+
     console.log('Yuque API response:', response.data);
     res.json(response.data);
   } catch (error) {
@@ -132,7 +126,7 @@ async function getLoginName(cookie) {
         Cookie: cookie
       }
     });
-    
+
     const bookStack = response.data;
     const loginName = bookStack.data[0].books[0].summary[0].user.login;
     return loginName;
@@ -145,10 +139,10 @@ async function getLoginName(cookie) {
 // 构建目录树
 function buildTree(catalogData) {
   const tree = { "0": [] };
-  
+
   // 按层级排序
   const nodes = catalogData.data.sort((a, b) => a.level - b.level);
-  
+
   // 构建树结构
   for (const node of nodes) {
     if (!tree[node.uuid]) {
@@ -163,15 +157,16 @@ function buildTree(catalogData) {
       tree[node.parent_uuid].push(node);
     }
   }
-  
+
   return tree;
 }
 
 // DFS遍历目录树并下载文档
 async function dfs(tree, nodeId, bookFolder, cookie, nodeInfo, loginName, bookSlug, currentPath = '') {
+  const tasks = [];
   for (const node of tree[nodeId] || []) {
     let folderPath = currentPath;
-    
+
     // 如果是目录节点
     if (node.type === 'TITLE') {
       folderPath = currentPath + '/' + node.title;
@@ -181,49 +176,42 @@ async function dfs(tree, nodeId, bookFolder, cookie, nodeInfo, loginName, bookSl
     // 如果是文档节点
     else if (node.type === 'DOC' && nodeInfo[node.doc_id]) {
       const doc = nodeInfo[node.doc_id];
-      try {
-        // 构建下载链接
-        const downloadUrl = `https://www.yuque.com/${loginName}/${bookSlug}/${doc.slug}/markdown?attachment=true&latexcode=true&anchor=false&linebreak=false`;
-        console.log('Downloading:', downloadUrl);
-        
-        const contentResponse = await axios.get(downloadUrl, {
-          headers: {
-            ...yuqueHeaders,
-            Cookie: cookie
-          }
-        });
-        // 如果失败，重新尝试3次数
-        let retry = 3;
-        while (contentResponse.status !== 200 && retry > 0) {
-          contentResponse = await axios.get(downloadUrl, {
+      const task = (async () => {
+        try {
+          // 构建下载链接
+          const downloadUrl = `https://www.yuque.com/${loginName}/${bookSlug}/${doc.slug}/markdown?attachment=true&latexcode=true&anchor=false&linebreak=false`;
+          console.log('Downloading:', downloadUrl);
+
+          const contentResponse = await axios.get(downloadUrl, {
             headers: {
               ...yuqueHeaders,
               Cookie: cookie
             }
           });
-          retry--;
+          // 保存到对应目录
+          const filePath = (folderPath + '/' + doc.title + '.md').slice(1);
+          bookFolder.file(filePath, contentResponse.data);
+          console.log(`文章 "${filePath}" 下载完成`);
+        } catch (error) {
+          console.error(`Error downloading doc ${doc.title}:`, error.message);
         }
-        // 保存到对应目录
-        const filePath = (folderPath + '/' + doc.title + '.md').slice(1);
-        bookFolder.file(filePath, contentResponse.data);
-        console.log(`文章 "${filePath}" 下载完成`);
-      } catch (error) {
-        console.error(`Error downloading doc ${doc.title}:`, error.message);
-      }
+      })();
+      tasks.push(task);
     }
-    
+
     // 递归处理子节点
     if (tree[node.uuid]) {
-      await dfs(tree, node.uuid, bookFolder, cookie, nodeInfo, loginName, bookSlug, folderPath);
+      tasks.push(dfs(tree, node.uuid, bookFolder, cookie, nodeInfo, loginName, bookSlug, folderPath));
     }
   }
+  await Promise.all(tasks);
 }
 
 // 下载书籍（支持合并下载）
 app.post('/api/books/download', async (req, res) => {
   try {
     const { cookie, books, merge } = req.body;
-    
+
     // 获取用户登录名
     const loginName = await getLoginName(cookie);
     console.log('User login name:', loginName);
@@ -232,9 +220,9 @@ app.post('/api/books/download', async (req, res) => {
     const zip = new JSZip();
 
     // 处理每本书
-    for (const book of books) {
+    const bookTasks = books.map(async (book) => {
       console.log(`Processing book: ${book.name}`);
-      
+
       // 获取文档列表和目录结构
       const [docsResponse, catalogResponse] = await Promise.all([
         axios.get(`https://www.yuque.com/api/docs?book_id=${book.id}`, {
@@ -257,19 +245,21 @@ app.post('/api/books/download', async (req, res) => {
       // 构建目录树并下载文档
       const tree = buildTree(catalogResponse.data);
       await dfs(tree, "0", bookFolder, cookie, nodeInfo, loginName, book.slug);
-    }
+    });
+
+    await Promise.all(bookTasks);
 
     // 生成 ZIP 文件
     const content = await zip.generateAsync({ type: 'nodebuffer' });
-    
+
     // 设置响应头
     res.setHeader('Content-Type', 'application/zip');
-    res.setHeader('Content-Disposition', 
+    res.setHeader('Content-Disposition',
       `attachment; filename=${encodeURIComponent(merge ? 'yuque-books.zip' : books[0].name + '.zip')}`);
-    
+
     // 发送文件
     res.send(content);
-    
+
     console.log('下载完成');
   } catch (error) {
     console.error('Error downloading books:', error.response?.data || error.message);
@@ -281,4 +271,4 @@ app.listen(PORT, () => {
   console.log(`\nServer running on http://localhost:${PORT}`);
   console.log(`Test endpoint: http://localhost:${PORT}/api/test`);
   console.log('CORS enabled for localhost origins');
-}); 
+});
