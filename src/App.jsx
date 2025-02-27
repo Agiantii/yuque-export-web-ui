@@ -49,7 +49,10 @@ function App() {
       setDownloading(false)
     }
   }
-
+  const removeCookie = () => {  
+    alert("已移除cookie")
+    localStorage.removeItem("cookie")
+  }
   return (
     <div className="app">
       <h1>yuque-export</h1>
@@ -58,11 +61,17 @@ function App() {
       {!books.length ?(
         <ConfigForm onSubmit={handleConfigSubmit} loading={loading} />
       ) : (
-        <BookList 
-          books={books} 
-          onDownload={handleDownload}
-          downloading={downloading}
-        />
+
+          <>
+            <div className="cookie">
+              <button onClick={removeCookie}>移除cookie</button>
+            </div>
+            <BookList
+              books={books}
+              onDownload={handleDownload}
+              downloading={downloading}
+            />
+          </>
       )}
     </div>
   )

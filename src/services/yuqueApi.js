@@ -1,4 +1,6 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_APP_API_BASE;
+console.log('API_BASE:', API_BASE);
+// const API_BASE = 'http://agiantii.fun:7000/api';
 
 const headers = {
   'Referer': 'https://www.yuque.com',
