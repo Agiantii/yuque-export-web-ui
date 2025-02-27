@@ -192,14 +192,21 @@ async function dfs(tree, nodeId, bookFolder, cookie, nodeInfo, loginName, bookSl
             Cookie: cookie
           }
         });
-        
+        // 如果失败，重新尝试3次数
+        let retry = 3;
+        while (contentResponse.status !== 200 && retry > 0) {
+          contentResponse = await axios.get(downloadUrl, {
+            headers: {
+              ...yuqueHeaders,
+              Cookie: cookie
+            }
+          });
+          retry--;
+        }
         // 保存到对应目录
         const filePath = (folderPath + '/' + doc.title + '.md').slice(1);
         bookFolder.file(filePath, contentResponse.data);
         console.log(`文章 "${filePath}" 下载完成`);
-        
-        // 添加延时避免请求过快
-        await new Promise(resolve => setTimeout(resolve, 1000));
       } catch (error) {
         console.error(`Error downloading doc ${doc.title}:`, error.message);
       }

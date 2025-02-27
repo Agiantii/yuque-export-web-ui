@@ -36,12 +36,25 @@ function App() {
       setLoading(false)
     }
   }
-
+  const tipalter= (msg,expileTime=2000) => {
+    // 创建一个弹窗
+    const tip = document.createElement('div')
+    tip.innerHTML = msg
+    tip.style.cssText = 'position: fixed; top: 10%; left: 50%; transform: translate(-50%, -50%); padding: 10px 20px; background-color: rgba(0, 0, 0, 0.8); color: #fff; border-radius: 5px; z-index: 9999;'
+    document.body.appendChild(tip)
+    // 一段时间后删除弹窗
+    setTimeout(() => {
+      document.body.removeChild(tip)
+    }, expileTime)
+  }
   const handleDownload = async (selectedBooks, mergeDownload) => {
     setDownloading(true)
     setError('')
     try {
+      const startTime = Date.now()
       await downloadBooks(cookie, selectedBooks, mergeDownload)
+      const endTime = Date.now()
+      tipalter(`下载完成，耗时${(endTime - startTime) / 1000}秒`)
     } catch (err) {
       setError('下载过程中出现错误')
       console.error('Download error:', err)
