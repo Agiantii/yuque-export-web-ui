@@ -1,8 +1,9 @@
 .book-list-container {
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  display: grid;
+  /* grid-template-columns: repeat(3,1fr); */
 }
 
 .book-list-header {

@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState,useEffect} from 'react';
 
 export default function ConfigForm({ onSubmit, loading }) {
   const [cookie, setCookie] = useState('');
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(cookie);

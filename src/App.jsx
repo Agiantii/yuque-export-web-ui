@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import ConfigForm from './components/ConfigForm'
 import BookList from './components/BookList'
 import { getBooks, downloadBooks } from './services/yuqueApi'
@@ -11,6 +11,11 @@ function App() {
   const [downloading, setDownloading] = useState(false)
   const [error, setError] = useState('')
 
+  useEffect(()=>{
+    if(localStorage.getItem("cookie")){
+      handleConfigSubmit(localStorage.getItem("cookie"))
+    }
+  },[])
   const handleConfigSubmit = async (newCookie) => {
     setLoading(true)
     setError('')
@@ -18,6 +23,7 @@ function App() {
       const bookList = await getBooks(newCookie)
       setCookie(newCookie)
       setBooks(bookList)
+      localStorage.setItem("cookie",newCookie)
     } catch (err) {
       setError('获取书籍列表失败，请检查Cookie是否正确')
     } finally {
@@ -43,7 +49,7 @@ function App() {
       <h1>语雀文档下载器</h1>
       {error && <div className="error">{error}</div>}
       
-      {!books.length ? (
+      {!books.length ?(
         <ConfigForm onSubmit={handleConfigSubmit} loading={loading} />
       ) : (
         <BookList 

@@ -64,14 +64,6 @@ function BookList({ books, onDownload, downloading }) {
             />
             全选
           </label>
-          <label className="merge-option">
-            <input
-              type="checkbox"
-              checked={mergeDownload}
-              onChange={(e) => setMergeDownload(e.target.checked)}
-            />
-            合并下载
-          </label>
           <button
             onClick={handleDownload}
             disabled={downloading || selectedBooks.size === 0}
