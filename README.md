@@ -28,10 +28,27 @@
 git clone https://github.com/Agiantii/yuque-export-web-ui
 ```
 ```bash
-cd yuque-export-web
+cd yuque-export-web-ui
 ```
+### 启动前端
 
-### 
+```bash
+npm install
+```
+```bash
+npm run dev
+```
+### 启动后端
+
+```bash
+cd server
+```
+```bash
+npm install
+```
+```bash
+npm run start
+```
 
 
 ## 使用方法
