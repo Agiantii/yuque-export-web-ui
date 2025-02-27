@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import ConfigForm from './components/ConfigForm'
 import BookList from './components/BookList'
-import { getBooks, downloadBook } from './services/yuqueApi'
+import { getBooks, downloadBooks } from './services/yuqueApi'
 import './App.css'
 
 function App() {
@@ -25,35 +25,14 @@ function App() {
     }
   }
 
-  const handleDownload = async (selectedBooks) => {
+  const handleDownload = async (selectedBooks, mergeDownload) => {
     setDownloading(true)
     setError('')
     try {
-      const bookData = await Promise.all(
-        selectedBooks.map(book => downloadBook(cookie, book.id, book.name,book.slug))
-      )
-      
-      // Create a zip file with the downloaded content
-      const zip = new JSZip()
-      
-      selectedBooks.forEach((book, index) => {
-        const bookFolder = zip.folder(book.name)
-        const { docs } = bookData[index]
-        
-        docs.forEach(doc => {
-          bookFolder.file(`${doc.title}.md`, doc.content || '')
-        })
-      })
-      
-      const content = await zip.generateAsync({ type: 'blob' })
-      const url = window.URL.createObjectURL(content)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'yuque-books.zip'
-      a.click()
-      window.URL.revokeObjectURL(url)
+      await downloadBooks(cookie, selectedBooks, mergeDownload)
     } catch (err) {
       setError('下载过程中出现错误')
+      console.error('Download error:', err)
     } finally {
       setDownloading(false)
     }

@@ -5,6 +5,7 @@ function BookList({ books, onDownload, downloading }) {
   const [selectedBooks, setSelectedBooks] = useState(new Set());
   const [searchTerm, setSearchTerm] = useState('');
   const [selectAll, setSelectAll] = useState(false);
+  const [mergeDownload, setMergeDownload] = useState(true); // 默认合并下载
 
   // 过滤后的书籍列表
   const filteredBooks = books.filter(book => 
@@ -39,7 +40,7 @@ function BookList({ books, onDownload, downloading }) {
   // 处理下载
   const handleDownload = () => {
     const booksToDownload = books.filter(book => selectedBooks.has(book.id));
-    onDownload(booksToDownload);
+    onDownload(booksToDownload, mergeDownload);
   };
 
   return (
@@ -62,6 +63,14 @@ function BookList({ books, onDownload, downloading }) {
               onChange={handleSelectAll}
             />
             全选
+          </label>
+          <label className="merge-option">
+            <input
+              type="checkbox"
+              checked={mergeDownload}
+              onChange={(e) => setMergeDownload(e.target.checked)}
+            />
+            合并下载
           </label>
           <button
             onClick={handleDownload}

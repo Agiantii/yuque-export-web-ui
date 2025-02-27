@@ -35,16 +35,24 @@ export const getBooks = async (cookie) => {
   }
 };
 
-export const downloadBook = async (cookie, bookId, bookName, bookSlug) => {
+export const downloadBooks = async (cookie, books, merge = true) => {
   try {
-    console.log(`开始下载书籍: ${bookName}`);
+    console.log(`开始${merge ? '合并' : '分别'}下载 ${books.length} 本书籍`);
     
-    const response = await fetch(`${API_BASE}/book/download`, {
+    const response = await fetch(`${API_BASE}/books/download`, {
       method: 'POST',
       headers,
-      body: JSON.stringify({ cookie, bookId, bookName, bookSlug })
+      body: JSON.stringify({
+        cookie,
+        books: books.map(book => ({
+          id: book.id,
+          name: book.name,
+          slug: book.slug
+        })),
+        merge
+      })
     });
-    console.log({ cookie, bookId, bookName, bookSlug })
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -56,7 +64,7 @@ export const downloadBook = async (cookie, bookId, bookName, bookSlug) => {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${bookName}.zip`;
+    a.download = merge ? 'yuque-books.zip' : `${books[0].name}.zip`;
     document.body.appendChild(a);
     a.click();
     
@@ -64,9 +72,9 @@ export const downloadBook = async (cookie, bookId, bookName, bookSlug) => {
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
     
-    console.log(`书籍 ${bookName} 下载完成`);
+    console.log('下载完成');
   } catch (error) {
-    console.error('Error downloading book:', error);
+    console.error('Error downloading books:', error);
     throw error;
   }
 }; 
