@@ -240,8 +240,7 @@ app.post('/api/book/download', async (req, res) => {
     const zip = new JSZip();
     const bookFolder = zip.folder(bookName);
 
-    // 保存目录结构
-    bookFolder.file('catalog.json', JSON.stringify(catalogResponse.data, null, 2));
+
 
     // 构建文档信息映射
     const nodeInfo = {};
