@@ -27,7 +27,7 @@ jobs:
           source: "./dist" # 直接把dist传到服务器 
           target: ${{ secrets.SERVER_TARGET }}
       - name: install server dependencies
-        run: pnpm install --prefix ./server
+        run: npm install --prefix ./server
       - name: copy server via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
