@@ -70,7 +70,24 @@ function App() {
     <div className="app">
       <h1>yuque-export</h1>
       {error && <div className="error">{error}</div>}
-      
+      <div
+        style={{
+          margin: "10px",
+          height:"40px"
+        }}
+      >
+        <a href="http://blog.agiantii.fun/post/project/yuque-export-web-ui.md/Q&A.html#q-a" target="_blank" rel="noreferrer"
+         style={
+          {
+            color: "white",
+            textDecoration: "none",
+            background: "#007bff",
+            padding: "5px 10px",
+            borderRadius: "5px",
+          }
+         }
+        >Q&A</a>
+      </div>
       {!books.length ?(
         <ConfigForm onSubmit={handleConfigSubmit} loading={loading} />
       ) : (

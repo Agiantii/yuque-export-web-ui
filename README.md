@@ -10,6 +10,21 @@
   - 图床 迁移 至 图床
 - yuque-export-web-ui 改自 [yuque-export-simple](https://github.com/Agiantii/yuque-export-simple.git)
 
+## Q&A
+####  如何获取cookkie
+
+进入[语雀](https://www.yuque.com/dashboard) `F12` 打开开发者工具
+进入 console 输入 `document.cookie` 回车即可获取到 `cookie`
+
+####  是否会泄露用户的cookie以及其他信息
+
+不会,本项目所有代码 可在[github](https://github.com/Agiantii/yuque-export-web-ui) 查看
+
+####  下载速率如何
+大概是 100篇/s 左右, 但是由于网络原因可能会有波动
+
+如果能对您有所帮助,那再好不过了,如果有任何问题,欢迎提issue
+
 ## 项目结构
 
 ```
