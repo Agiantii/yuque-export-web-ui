@@ -30,7 +30,7 @@ function App() {
     setError('')
     try {
       const bookData = await Promise.all(
-        selectedBooks.map(book => downloadBook(cookie, book.id, book.slug))
+        selectedBooks.map(book => downloadBook(cookie, book.id, book.name,book.slug))
       )
       
       // Create a zip file with the downloaded content

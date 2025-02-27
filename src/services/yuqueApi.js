@@ -44,7 +44,7 @@ export const downloadBook = async (cookie, bookId, bookName, bookSlug) => {
       headers,
       body: JSON.stringify({ cookie, bookId, bookName, bookSlug })
     });
-
+    console.log({ cookie, bookId, bookName, bookSlug })
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
