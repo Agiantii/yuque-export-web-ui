@@ -1,7 +1,8 @@
 # Yuque 导出文档的 Web UI
 
 这是一个用于导出 Yuque 文档的 Web UI 项目。该项目允许用户通过 Web 界面输入 Cookie 并选择要导出的书籍，最终生成包含所选书籍的 ZIP 文件。
-
+# 在线地址
+[yuque-export-web-ui](http://yq.agiantii.fun)
 # web界面
 ![alt text](assets/README/image.png)
 # ps
@@ -10,7 +11,9 @@
   - 图床 迁移至 本地
   - 图床 迁移 至 图床
 - yuque-export-web-ui 改自 [yuque-export-simple](https://github.com/Agiantii/yuque-export-simple.git)
-
+# 功能
+- 支持筛选和搜索 你所需要导出的 书库 :black_nib:
+- 导出成zip格式 
 # Q&A
 ####  如何获取cookkie
 
