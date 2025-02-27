@@ -20,12 +20,13 @@ app.use((req, res, next) => {
 // 允许前端访问
 app.use(cors({
   origin: function(origin, callback) {
-    // 允许本地开发环境的请求
-    if (!origin || origin.startsWith('http://localhost:')) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
+    // // 允许本地开发环境的请求
+    // if (!origin || origin.startsWith('http://localhost:')) {
+    //   callback(null, true);
+    // } else {
+    //   callback(new Error('Not allowed by CORS'));
+    // }
+    callback(null,true)
   },
   credentials: true
 }));

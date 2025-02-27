@@ -13,7 +13,13 @@ function App() {
 
   useEffect(()=>{
     if(localStorage.getItem("cookie")){
-      handleConfigSubmit(localStorage.getItem("cookie"))
+      try{
+        handleConfigSubmit(localStorage.getItem("cookie"))
+      }
+      catch(err){
+        setError('获取书籍列表失败，请检查Cookie是否正确 已为你移除本地cookie')
+        localStorage.removeItem("cookie")
+      }
     }
   },[])
   const handleConfigSubmit = async (newCookie) => {
@@ -46,7 +52,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>语雀文档下载器</h1>
+      <h1>yuque-export</h1>
       {error && <div className="error">{error}</div>}
       
       {!books.length ?(
