@@ -18,7 +18,8 @@
 ####  如何获取cookkie
 
 进入[语雀](https://www.yuque.com/dashboard) `F12` 打开开发者工具
-进入 console 输入 `document.cookie` 回车即可获取到 `cookie`
+打开 `network`/`网络` 选项卡 搜索 mine这个请求 复制其cookie即可
+![alt text](assets/README/Snipaste_2025-05-14_10-21-39.png)
 
 ####  是否会泄露用户的cookie以及其他信息
 
