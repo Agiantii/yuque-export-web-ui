@@ -82,6 +82,9 @@ function App() {
         <a href="https://github.com/Agiantii/yuque-export-web-ui.git" target="_blank" rel="noreferrer"
           className='link'
         >github</a>
+        <a href="https://github.com/Agiantii/yuque-export-web-ui/issues" target="_blank" rel="noreferrer"
+          className='link'
+        >issues</a>
       </div>
       {!books.length ?(
         <ConfigForm onSubmit={handleConfigSubmit} loading={loading} />
