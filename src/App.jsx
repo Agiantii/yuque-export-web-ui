@@ -76,7 +76,7 @@ function App() {
           height:"40px"
         }}
       >
-        <a href="http://blog.agiantii.fun/post/project/yuque-export-web-ui/Q&A.html#q-a" target="_blank" rel="noreferrer"
+        <a href="http://blog.agiantii.top/post/project/yuque-export-web-ui/Q&A.html#q-a" target="_blank" rel="noreferrer"
           className='link'
         >Q&A</a>
         <a href="https://github.com/Agiantii/yuque-export-web-ui.git" target="_blank" rel="noreferrer"
