@@ -2,7 +2,7 @@
 
 这是一个用于导出 Yuque 文档的 Web UI 项目。该项目允许用户通过 Web 界面输入 Cookie 并选择要导出的书籍，最终生成包含所选书籍的 ZIP 文件。
 # 在线地址
-[yuque-export-web-ui](http://yq.agiantii.fun)
+[yuque-export-web-ui](http://yq.agiantii.top)
 # web界面
 ![alt text](assets/README/image.png)
 # ps
