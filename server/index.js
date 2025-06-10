@@ -120,7 +120,7 @@ app.post('/api/doc/content', async (req, res) => {
 // 获取用户登录名
 async function getLoginName(cookie) {
   try {
-    const response = await axios.get('https://www.yuque.com/api/mine/book_stacks', {
+    const response = await axios.get('https://www.yuque.com/api/mine', {
       headers: {
         ...yuqueHeaders,
         Cookie: cookie
@@ -128,8 +128,20 @@ async function getLoginName(cookie) {
     });
 
     const bookStack = response.data;
-    const loginName = bookStack.data[0].books[0].summary[0].user.login;
+
+    // const loginName = bookStack.data[0].books[0].summary[0].user.login;
+    const loginName = bookStack.login;
     return loginName;
+    // const response = await axios.get('https://www.yuque.com/api/mine/book_stacks', {
+    //   headers: {
+    //     ...yuqueHeaders,
+    //     Cookie: cookie
+    //   }
+    // });
+
+    // const bookStack = response.data;
+    // const loginName = bookStack.data[0].books[0].summary[0].user.login;
+    // return loginName;
   } catch (error) {
     console.error('Error getting login name:', error);
     throw error;
