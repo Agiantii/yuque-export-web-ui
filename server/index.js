@@ -41,16 +41,13 @@ app.get("/api/test", (req, res) => {
   });
 });
 
+
 // 获取书籍列表
 app.post('/api/books', async (req, res) => {
   let cookie = req.body.cookie || req.headers.cookie;
   // 去除coolie最前面的换行和空格
   if (cookie) {
-    if(cookie.includes('\n') || cookie.includes('\r')) {
-      console.log('Cookie contains newline characters, removing them...');
-      cookie = cookie.replace(/[\r\n]+/g, ''); // 去除所有换行符
-    }
-    cookie = cookie.replace(/^[\r\n\s]+/, ''); 
+      cookie = dealCookie(cookie);
   } else {
     return res.status(400).json({ error: 'Cookie is required' });
   }
@@ -75,7 +72,10 @@ app.post('/api/books', async (req, res) => {
 // 获取文档列表
 app.post('/api/docs', async (req, res) => {
   try {
-    const { cookie, bookId } = req.body;
+    let { cookie, bookId } = req.body;
+    if(cookie){
+      cookie = dealCookie(cookie);
+    }
     const response = await axios.get(`https://www.yuque.com/api/docs?book_id=${bookId}`, {
       headers: {
         ...yuqueHeaders,
@@ -92,7 +92,10 @@ app.post('/api/docs', async (req, res) => {
 // 获取目录结构
 app.post('/api/catalog', async (req, res) => {
   try {
-    const { cookie, bookId } = req.body;
+    let { cookie, bookId } = req.body;
+    if(cookie){
+      cookie = dealCookie(cookie);
+    }
     const response = await axios.get(`https://www.yuque.com/api/catalog_nodes?book_id=${bookId}`, {
       headers: {
         ...yuqueHeaders,
@@ -109,7 +112,10 @@ app.post('/api/catalog', async (req, res) => {
 // 获取文档内容
 app.post('/api/doc/content', async (req, res) => {
   try {
-    const { cookie, docId } = req.body;
+    let { cookie, docId } = req.body;
+    if(cookie){
+      cookie = dealCookie(cookie);
+    }
     const response = await axios.get(
       `https://www.yuque.com/api/docs/${docId}/markdown?attachment=true&latexcode=true&anchor=false&linebreak=false`,
       {
@@ -125,10 +131,20 @@ app.post('/api/doc/content', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+function dealCookie(cookie) {
+  if (cookie.includes('\n') || cookie.includes('\r')) {
+    console.log('Cookie contains newline characters, removing them...');
+    cookie = cookie.replace(/[\r\n]+/g, ''); // 去除所有换行符
+  }
+  cookie = cookie.replace(/^[\r\n\s]+/, '');
+  return cookie
+}
 // 获取用户登录名
 async function getLoginName(cookie) {
   try {
+    if(cookie){
+      cookie = dealCookie(cookie);
+    }
     const response = await axios.get('https://www.yuque.com/api/mine', {
       headers: {
         ...yuqueHeaders,
@@ -231,8 +247,10 @@ async function dfs(tree, nodeId, bookFolder, cookie, nodeInfo, loginName, bookSl
 // 下载书籍（支持合并下载）
 app.post('/api/books/download', async (req, res) => {
   try {
-    const { cookie, books, merge } = req.body;
-
+    let { cookie, books, merge } = req.body;
+    if(cookie){
+      cookie = dealCookie(cookie);
+    }
     // 获取用户登录名
     const loginName = await getLoginName(cookie);
     console.log('User login name:', loginName);
