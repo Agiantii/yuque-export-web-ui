@@ -3,7 +3,7 @@ import ConfigForm from './components/ConfigForm'
 import BookList from './components/BookList'
 import { getBooks, downloadBooks } from './services/yuqueApi'
 import './App.css'
-
+import guideImage from './assets/guide.png'
 function App() {
   const [cookie, setCookie] = useState('')
   const [books, setBooks] = useState([])
@@ -123,7 +123,7 @@ function App() {
             </p>
             <div className='w-full max-w-xl mx-auto mt-4'>
               <img
-                src="/assets/README/Snipaste_2025-05-14_10-21-39.png"
+                src={guideImage}
                 alt="GitHub Logo"
                 className='w-full h-24 object-cover mt-2'
                 style={{ width: '100%', height: '100', marginTop: '10px' }}
