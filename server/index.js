@@ -127,7 +127,7 @@ async function getLoginName(cookie) {
       }
     });
 
-    const bookStack = response.data;
+    const bookStack = response.data.data;
 
     // const loginName = bookStack.data[0].books[0].summary[0].user.login;
     const loginName = bookStack.login;

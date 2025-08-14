@@ -85,6 +85,9 @@ function App() {
         <a href="https://github.com/Agiantii/yuque-export-web-ui/issues" target="_blank" rel="noreferrer"
           className='link'
         >issues</a>
+        <a href="https://github.com/Agiantii/yuque-export-web-ui" target="_blank" rel="noreferrer"
+          className='link'
+        >点个start吧</a>
       </div>
       {!books.length ?(
         <ConfigForm onSubmit={handleConfigSubmit} loading={loading} />
@@ -101,6 +104,32 @@ function App() {
             />
           </>
       )}
+     {
+        ! books.length &&(
+          <footer className="mt-10 text-gray-500 text-sm max-w-xl text-center">
+            <p>
+              进入
+              <a href="https://www.yuque.com/api/mine" target="_blank" rel="noreferrer" className="text-blue-500 underline mx-1">
+                https://www.yuque.com/api/mine
+              </a>
+              <span className="font-mono bg-gray-200 px-1 rounded">F12</span>
+              打开开发者工具，打开
+              <span className="font-mono bg-gray-200 px-1 rounded">network/网络</span>
+              选项卡，搜索
+              <span className="font-mono bg-gray-200 px-1 rounded">mine</span>
+              这个请求，复制其cookie即可
+            </p>
+            <div className='w-full max-w-xl mx-auto mt-4'>
+              <img
+                src="/assets/README/Snipaste_2025-05-14_10-21-39.png"
+                alt="GitHub Logo"
+                className='w-full h-24 object-cover mt-2'
+                style={{ width: '100%', height: '100', marginTop: '10px' }}
+              />
+            </div>
+          </footer>
+        )
+     }
     </div>
   )
 }
