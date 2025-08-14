@@ -65,6 +65,8 @@ function App() {
   const removeCookie = () => {  
     alert("已移除cookie")
     localStorage.removeItem("cookie")
+    //refresh the page
+    window.location.reload()
   }
   return (
     <div className="app">

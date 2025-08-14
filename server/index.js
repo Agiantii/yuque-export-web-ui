@@ -43,8 +43,17 @@ app.get("/api/test", (req, res) => {
 
 // 获取书籍列表
 app.post('/api/books', async (req, res) => {
-  console.log('\n=== Books Request ===');
-  const { cookie } = req.body;
+  let cookie = req.body.cookie || req.headers.cookie;
+  // 去除coolie最前面的换行和空格
+  if (cookie) {
+    if(cookie.includes('\n') || cookie.includes('\r')) {
+      console.log('Cookie contains newline characters, removing them...');
+      cookie = cookie.replace(/[\r\n]+/g, ''); // 去除所有换行符
+    }
+    cookie = cookie.replace(/^[\r\n\s]+/, ''); 
+  } else {
+    return res.status(400).json({ error: 'Cookie is required' });
+  }
   console.log('Received cookie from body:', cookie);
 
   try {
